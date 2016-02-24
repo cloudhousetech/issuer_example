@@ -35,11 +35,11 @@ defmodule OldIssuer do
 
   defp send_response(state = %{active_request: request}, response) do
     state.response_sender.({request, response})
-    state
+    %{state| active_request: :none}
   end
 
   defp send_next_request(state = %{queue: []}) do
-    %{state| active_request: :none}
+    state
   end
 
   defp send_next_request(state = %{queue: [request|requests]}) do
