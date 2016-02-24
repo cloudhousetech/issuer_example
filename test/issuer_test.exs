@@ -4,30 +4,30 @@ defmodule IssuerTest do
 
   test "Couples request and response" do
     {:ok, issuer} = Issuer.start_link request_sender, response_sender
-    Issuer.add_request issuer, "Q"
-    assert_receive {:request, "Q"}
-    Issuer.add_response issuer, "A"
-    assert_receive {:response, {"Q", "A"}}
+    Issuer.add_request issuer, "Request"
+    assert_receive {:request, "Request"}
+    Issuer.add_response issuer, "Response"
+    assert_receive {:response, {"Request", "Response"}}
   end
 
   test "Requests are queued" do
     {:ok, issuer} = Issuer.start_link request_sender, response_sender
-    Issuer.add_request issuer, "Q1"
-    assert_receive {:request, "Q1"}
-    Issuer.add_request issuer, "Q2"
+    Issuer.add_request issuer, "Request1"
+    assert_receive {:request, "Request1"}
+    Issuer.add_request issuer, "Request2"
     refute_receive _
-    Issuer.add_request issuer, "Q3"
+    Issuer.add_request issuer, "Request3"
     refute_receive _
-    Issuer.add_response issuer, "A1"
-    assert_receive {:response, {"Q1", "A1"}}
-    assert_receive {:request, "Q2"}
+    Issuer.add_response issuer, "Response1"
+    assert_receive {:response, {"Request1", "Response1"}}
+    assert_receive {:request, "Request2"}
     refute_receive _
-    Issuer.add_response issuer, "A2"
-    assert_receive {:response, {"Q2", "A2"}}
-    assert_receive {:request, "Q3"}
+    Issuer.add_response issuer, "Response2"
+    assert_receive {:response, {"Request2", "Response2"}}
+    assert_receive {:request, "Request3"}
     refute_receive _
-    Issuer.add_response issuer, "A3"
-    assert_receive {:response, {"Q3", "A3"}}
+    Issuer.add_response issuer, "Response3"
+    assert_receive {:response, {"Request3", "Response3"}}
     refute_receive _
   end
 
